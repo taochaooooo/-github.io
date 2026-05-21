@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>志硕针织 · 面料展示</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f5f5f5;
+  --surface: #fff;
+  --border: #e5e5e5;
+  --text: #1a1a1a;
+  --text2: #777;
+  --accent: #1a1a1a;
+  --accent-hover: #444;
+  --radius: 8px;
+  --max: 1400px;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== HEADER ===== */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255,255,255,0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 0;
+}
+.header-inner { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+.header-top { display: flex; align-items: center; gap: 16px; margin-bottom: 10px; }
+.logo {
+  font-size: 19px; font-weight: 700; letter-spacing: -0.5px; white-space: nowrap;
+  color: var(--accent); text-decoration: none;
+}
+.logo-sub { font-size: 12px; color: var(--text2); font-weight: 400; margin-left: 8px; }
+
+.search-box { flex: 1; max-width: 340px; position: relative; }
+.search-box input {
+  width: 100%; padding: 9px 16px 9px 38px;
+  border: 1px solid var(--border); border-radius: 24px;
+  font-size: 14px; outline: none; background: var(--bg);
+  transition: border-color 0.15s, background 0.15s;
+}
+.search-box input:focus { border-color: var(--accent); background: var(--surface); }
+.search-icon {
+  position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
+  color: #aaa; pointer-events: none;
+}
+.result-count { font-size: 13px; color: var(--text2); white-space: nowrap; margin-left: auto; }
+
+/* ===== FILTERS ===== */
+.filter-bar { display: flex; flex-wrap: wrap; gap: 20px; }
+.filter-group { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.filter-label { font-size: 12px; color: var(--text2); font-weight: 500; white-space: nowrap; }
+.chip {
+  padding: 4px 13px; border: 1px solid var(--border); border-radius: 20px;
+  font-size: 13px; cursor: pointer; background: var(--surface);
+  transition: all 0.12s; user-select: none; white-space: nowrap;
+}
+.chip:hover { border-color: #aaa; }
+.chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* ===== GRID ===== */
+.main { max-width: var(--max); margin: 0 auto; padding: 20px 24px; }
+.grid { columns: 4; column-gap: 16px; }
+@media (max-width: 1100px) { .grid { columns: 3; } }
+@media (max-width: 768px)  { .grid { columns: 2; } }
+@media (max-width: 480px)  { .grid { columns: 1; } }
+
+/* ===== CARD ===== */
+.card {
+  break-inside: avoid; margin-bottom: 16px; background: var(--surface);
+  border-radius: var(--radius); overflow: hidden; cursor: pointer;
+  transition: box-shadow 0.15s; border: 1px solid var(--border);
+}
+.card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+.card-img {
+  width: 100%; min-height: 200px; display: flex; align-items: center;
+  justify-content: center; position: relative; overflow: hidden;
+  background-color: #e8e8e8;
+}
+.card-img-swatch {
+  position: absolute; inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.025) 3px, rgba(0,0,0,0.025) 4px),
+    repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(0,0,0,0.025) 3px, rgba(0,0,0,0.025) 4px);
+  z-index: 1; pointer-events: none;
+}
+.card-img img { width: 100%; display: block; object-fit: cover; position: relative; z-index: 2; }
+.card-img .swatch-label {
+  position: relative; z-index: 2; text-align: center; padding: 16px;
+  font-size: 17px; font-weight: 700; letter-spacing: 1px;
+  color: rgba(0,0,0,0.45); text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+  line-height: 1.3;
+}
+.card-img .swatch-label small { font-size: 12px; font-weight: 400; display: block; margin-top: 4px; opacity: 0.6; }
+.card-badge {
+  position: absolute; top: 10px; left: 10px; z-index: 3;
+  padding: 3px 8px; border-radius: 4px; font-size: 11px;
+  background: rgba(0,0,0,0.5); color: #fff; font-weight: 500;
+}
+.card-body { padding: 14px 16px; }
+.card-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.card-id { font-size: 13px; font-weight: 600; color: var(--text); }
+.card-name { font-size: 12px; color: var(--text2); }
+.card-meta { font-size: 13px; color: var(--text2); display: flex; flex-wrap: wrap; gap: 2px 12px; margin-bottom: 12px; }
+.card-meta span { white-space: nowrap; }
+
+.btn-inquire {
+  width: 100%; padding: 8px 0; border: 1px solid var(--accent);
+  border-radius: 6px; background: var(--surface); color: var(--accent);
+  font-size: 13px; cursor: pointer; font-weight: 500; transition: all 0.12s;
+}
+.btn-inquire:hover { background: var(--accent); color: #fff; }
+
+/* ===== EMPTY ===== */
+.empty { text-align: center; padding: 80px 24px; color: var(--text2); display: none; }
+.empty-icon { font-size: 48px; margin-bottom: 12px; }
+.empty-title { font-size: 18px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
+.empty-sub { font-size: 14px; }
+
+/* ===== MODAL ===== */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200;
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+  opacity: 0; pointer-events: none; transition: opacity 0.2s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: auto; }
+.modal {
+  background: var(--surface); border-radius: 12px; width: 100%;
+  max-width: 740px; max-height: 90vh; overflow-y: auto; position: relative;
+}
+.modal-close {
+  position: absolute; top: 12px; right: 16px; width: 36px; height: 36px;
+  border-radius: 50%; border: none; background: #f3f3f3; font-size: 20px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  z-index: 10; transition: background 0.12s;
+}
+.modal-close:hover { background: #e0e0e0; }
+
+/* ===== DETAIL ===== */
+.detail-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+@media (max-width: 640px) { .detail-layout { grid-template-columns: 1fr; } }
+.detail-img {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 380px; position: relative; overflow: hidden;
+}
+.detail-img .detail-swatch {
+  position: absolute; inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.025) 3px, rgba(0,0,0,0.025) 4px),
+    repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(0,0,0,0.025) 3px, rgba(0,0,0,0.025) 4px);
+  z-index: 1; pointer-events: none;
+}
+.detail-img img { width: 100%; height: 100%; object-fit: cover; display: block; position: relative; z-index: 2; }
+.detail-img .detail-swatch-label {
+  position: relative; z-index: 2; text-align: center; padding: 24px;
+  font-size: 24px; font-weight: 700; letter-spacing: 2px;
+  color: rgba(0,0,0,0.4); text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+}
+.detail-img .detail-swatch-label small { font-size: 14px; font-weight: 400; display: block; margin-top: 8px; opacity: 0.5; }
+.detail-info { padding: 32px; display: flex; flex-direction: column; }
+.detail-id { font-size: 13px; color: var(--text2); font-weight: 500; margin-bottom: 4px; }
+.detail-name { font-size: 22px; font-weight: 700; margin-bottom: 16px; }
+.detail-specs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+.detail-spec { font-size: 14px; }
+.detail-spec-label { color: var(--text2); font-size: 12px; margin-bottom: 2px; }
+.detail-spec-value { font-weight: 500; }
+.detail-note {
+  background: #f9f9f9; padding: 12px 16px; border-radius: 8px;
+  font-size: 13px; color: var(--text2); margin-bottom: 20px; line-height: 1.6;
+}
+.detail-section-title { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+.color-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+.color-tag { padding: 5px 12px; background: #f3f3f3; border-radius: 6px; font-size: 13px; }
+.detail-btn {
+  margin-top: auto; padding: 12px 24px; background: var(--accent); color: #fff;
+  border: none; border-radius: 8px; font-size: 15px; cursor: pointer; font-weight: 500;
+  transition: background 0.12s;
+}
+.detail-btn:hover { background: var(--accent-hover); }
+
+/* ===== INQUIRY FORM ===== */
+.inquiry-content { padding: 40px; }
+@media (max-width: 480px) { .inquiry-content { padding: 24px; } }
+.inquiry-title { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+.inquiry-sub { font-size: 14px; color: var(--text2); margin-bottom: 24px; }
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: var(--text2); }
+.form-group input {
+  width: 100%; padding: 10px 14px; border: 1px solid var(--border);
+  border-radius: 8px; font-size: 15px; outline: none; transition: border-color 0.15s;
+}
+.form-group input:focus { border-color: var(--accent); }
+.form-submit {
+  width: 100%; padding: 12px; background: var(--accent); color: #fff;
+  border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: 500;
+  margin-top: 8px; transition: background 0.12s;
+}
+.form-submit:hover { background: var(--accent-hover); }
+.form-hint { font-size: 12px; color: var(--text2); margin-top: 8px; text-align: center; }
+.form-success { text-align: center; padding: 48px 24px; display: none; }
+.form-success.show { display: block; }
+.form-success-icon { font-size: 48px; margin-bottom: 12px; }
+.form-success-title { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+.form-success-sub { font-size: 14px; color: var(--text2); }
+
+/* ===== FOOTER ===== */
+.footer {
+  text-align: center; padding: 32px 24px; font-size: 13px; color: #999;
+  border-top: 1px solid var(--border); margin-top: 48px; max-width: var(--max); margin-left: auto; margin-right: auto;
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="header-top">
+      <a href="#" class="logo" onclick="resetAll(); return false;">志硕针织<span class="logo-sub">B2B Fabric</span></a>
+      <div class="search-box">
+        <svg class="search-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchInput" placeholder="编号 / 名称 / 成分…" oninput="applyFilters()">
+      </div>
+      <span class="result-count" id="resultCount"></span>
+    </div>
+
+    <div class="filter-bar">
+      <div class="filter-group">
+        <span class="filter-label">成分</span>
+        <span class="chip active" data-group="comp" data-value="all" onclick="toggleChip(this)">全部</span>
+        <span class="chip" data-group="comp" data-value="全棉" onclick="toggleChip(this)">全棉</span>
+        <span class="chip" data-group="comp" data-value="涤纶" onclick="toggleChip(this)">涤纶</span>
+        <span class="chip" data-group="comp" data-value="混纺" onclick="toggleChip(this)">混纺</span>
+        <span class="chip" data-group="comp" data-value="其他" onclick="toggleChip(this)">其他</span>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">克重</span>
+        <span class="chip active" data-group="weight" data-value="all" onclick="toggleChip(this)">全部</span>
+        <span class="chip" data-group="weight" data-value="under150" onclick="toggleChip(this)">&lt;150gsm</span>
+        <span class="chip" data-group="weight" data-value="150-200" onclick="toggleChip(this)">150-200</span>
+        <span class="chip" data-group="weight" data-value="200-250" onclick="toggleChip(this)">200-250</span>
+        <span class="chip" data-group="weight" data-value="over250" onclick="toggleChip(this)">&gt;250</span>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">用途</span>
+        <span class="chip active" data-group="usage" data-value="all" onclick="toggleChip(this)">全部</span>
+        <span class="chip" data-group="usage" data-value="衬衫" onclick="toggleChip(this)">衬衫</span>
+        <span class="chip" data-group="usage" data-value="裤料" onclick="toggleChip(this)">裤料</span>
+        <span class="chip" data-group="usage" data-value="外套" onclick="toggleChip(this)">外套</span>
+        <span class="chip" data-group="usage" data-value="连衣裙" onclick="toggleChip(this)">连衣裙</span>
+        <span class="chip" data-group="usage" data-value="T恤/针织" onclick="toggleChip(this)">T恤/针织</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty">
+    <div class="empty-icon">🔍</div>
+    <div class="empty-title">没有匹配的面料</div>
+    <div class="empty-sub">试试调整筛选条件或搜索关键词</div>
+  </div>
+</main>
+
+<footer class="footer">
+  志硕针织 &nbsp;·&nbsp; 电话/微信：15061759022 &nbsp;·&nbsp; 专业面料供应商
+</footer>
+
+<!-- ===== DETAIL MODAL ===== -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal" id="detailModalContent">
+    <button class="modal-close" onclick="closeDetail()">✕</button>
+    <div id="detailInner"></div>
+  </div>
+</div>
+
+
+<script>
+/* ===========================================================================
+ * ★ 询盘跳转链接 —— 改成你的金数据/腾讯问卷等表单地址
+ * =========================================================================== */
+const JSJFORM_URL = 'https://next.jinshuju.net/forms/OKMkfR';
+
+/* ===========================================================================
+ * ★ 面料数据库 —— 添加/修改/删除面料在这里操作
+ *
+ * 字段说明：
+ *   id        面料编号
+ *   name      面料名称（显示在卡片上，可搜索）
+ *   compCat   成分分类，用于筛选 —— 可选值：全棉 / 涤纶 / 混纺 / 其他
+ *   compDetail  成分详情（卡片显示 + 搜索）
+ *   weight    克重显示文字
+ *   weightVal 克重数值，用于克重区间筛选
+ *   width     门幅
+ *   usageCat  用途分类，用于筛选 —— 可选值：衬衫 / 裤料 / 外套 / 连衣裙 / T恤/针织
+ *   usage     用途详情（显示用）
+ *   colors    颜色选项（用 / 分隔的字符串即可）
+ *   note      备注卖点（详情页显示）
+ *   image     图片路径 ★ 替换方法见文件末尾说明
+ * =========================================================================== */
+const FABRICS = [
+  // ===== 全棉系 =====
+  { id:"SS-001", name:"海盐棉", compCat:"全棉", compDetail:"93%棉 7%锦纶", weight:"103gsm", weightVal:103, width:"150cm", usageCat:"衬衫", usage:"衬衫、连衣裙", colors:"本白/浅灰/雾霾蓝/浅卡其", note:"轻薄挺爽、平纹微纱感，2026早春主打", image:"" },
+  { id:"TR-002", name:"绵感卫衣布", compCat:"全棉", compDetail:"100%棉", weight:"300gsm", weightVal:300, width:"175cm", usageCat:"外套", usage:"卫衣、休闲装", colors:"本白/黑/麻灰/藏青/燕麦", note:"经典款，需求稳定", image:"" },
+  { id:"TR-003", name:"斜纹弹力裤料", compCat:"全棉", compDetail:"97%棉 3%氨纶", weight:"220gsm", weightVal:220, width:"150cm", usageCat:"裤料", usage:"休闲裤、通勤裤", colors:"黑/藏青/卡其/深灰", note:"微弹抗皱，通勤必备", image:"" },
+  { id:"FN-003", name:"抗菌针织", compCat:"全棉", compDetail:"95%棉 5%抗菌纤维", weight:"190gsm", weightVal:190, width:"160cm", usageCat:"T恤/针织", usage:"内衣、T恤", colors:"本白/浅灰/黑", note:"长效抑菌，功能性面料-1", image:"" },
+  { id:"JE-001", name:"竹节弹力牛仔", compCat:"全棉", compDetail:"98%棉 2%氨纶", weight:"380gsm", weightVal:380, width:"150cm", usageCat:"裤料", usage:"牛仔裤、夹克", colors:"中蓝/深蓝/黑", note:"复古质感，微弹舒适", image:"" },
+  { id:"JE-002", name:"天丝牛仔", compCat:"全棉", compDetail:"70%棉 30%莱赛尔", weight:"240gsm", weightVal:240, width:"150cm", usageCat:"连衣裙", usage:"连衣裙、薄款裤", colors:"浅蓝/中蓝", note:"轻薄凉爽，春夏牛仔", image:"" },
+
+  // ===== 涤纶系 =====
+  { id:"SS-005", name:"凉感平纹针织", compCat:"涤纶", compDetail:"92%涤纶 8%氨纶", weight:"160gsm", weightVal:160, width:"155cm", usageCat:"T恤/针织", usage:"T恤、运动上衣", colors:"本白/黑/浅灰/薄荷绿", note:"含凉感纤维，夏季刚需，小单快返-3", image:"" },
+  { id:"SS-006", name:"精致格", compCat:"涤纶", compDetail:"100%涤纶", weight:"273gsm", weightVal:273, width:"150cm", usageCat:"外套", usage:"外套、裤装", colors:"藏青格/灰格/咖格", note:"细密格纹，轻微磨毛，老钱风", image:"" },
+  { id:"AW-002", name:"双面顺毛呢", compCat:"涤纶", compDetail:"100%聚酯纤维", weight:"380gsm", weightVal:380, width:"150cm", usageCat:"外套", usage:"大衣、外套", colors:"浅驼/米白/黑/灰", note:"性价比高，走量款", image:"" },
+  { id:"FN-002", name:"循环再生涤纶", compCat:"涤纶", compDetail:"100%再生涤纶", weight:"150gsm", weightVal:150, width:"155cm", usageCat:"T恤/针织", usage:"T恤、运动装", colors:"本白/黑/浅灰", note:"绿色环保，品牌刚需-4", image:"" },
+
+  // ===== 混纺系 =====
+  { id:"TR-001", name:"空气层罗马布", compCat:"混纺", compDetail:"54%涤 10%锦 27%人棉 9%氨纶", weight:"350gsm", weightVal:350, width:"160cm", usageCat:"外套", usage:"卫衣、外套、休闲裤", colors:"本白/黑/藏青/深灰/卡其", note:"厚实挺括，软糯有筋骨，四季通穿", image:"" },
+  { id:"TR-004", name:"羊毛混纺弹力", compCat:"混纺", compDetail:"70%涤 25%粘胶 5%氨纶", weight:"280gsm", weightVal:280, width:"148cm", usageCat:"裤料", usage:"西裤、通勤裤", colors:"黑/深灰/藏青/卡其", note:"垂坠抗皱，商务休闲", image:"" },
+
+  // ===== 其他 =====
+  { id:"SS-002", name:"桃花手抓绉", compCat:"其他", compDetail:"84%人棉 16%锦纶", weight:"123gsm", weightVal:123, width:"160cm", usageCat:"连衣裙", usage:"女装上衣、连衣裙", colors:"本白/浅粉/淡紫/燕麦色", note:"自然手抓肌理，复古松弛感，不透", image:"" },
+  { id:"SS-003", name:"醋酸双面缎", compCat:"其他", compDetail:"100%醋酸", weight:"95gsm", weightVal:95, width:"148cm", usageCat:"连衣裙", usage:"高端女装、礼服", colors:"本白/香槟/黑色/藏青", note:"丝滑有骨，2026春夏热销爆款-3", image:"" },
+  { id:"SS-004", name:"天丝衬衫布", compCat:"其他", compDetail:"100%莱赛尔", weight:"118gsm", weightVal:118, width:"150cm", usageCat:"衬衫", usage:"衬衫、连衣裙", colors:"本白/浅蓝/燕麦/浅灰", note:"凉感丝滑，吸湿透气，高端女装主力-3", image:"" },
+  { id:"AW-001", name:"羊绒毛呢", compCat:"其他", compDetail:"70%羊毛 30%涤纶", weight:"450gsm", weightVal:450, width:"148cm", usageCat:"外套", usage:"大衣、外套", colors:"浅灰/驼色/黑色/藏青", note:"保暖挺括，秋冬主力", image:"" },
+  { id:"FN-001", name:"生物基索罗娜", compCat:"其他", compDetail:"100%PTT", weight:"210gsm", weightVal:210, width:"150cm", usageCat:"裤料", usage:"裤装、外套", colors:"本白/黑/藏青/卡其", note:"生物基，环保弹力，2026趋势纤维-1", image:"" },
+  { id:"SS-007", name:"肌理感亚麻", compCat:"其他", compDetail:"55%亚麻 45%棉", weight:"145gsm", weightVal:145, width:"150cm", usageCat:"衬衫", usage:"衬衫、连衣裙", colors:"本白/浅卡其/浅灰绿", note:"天然肌理，透气吸湿，松弛感", image:"" },
+];
+
+/* ===========================================================================
+ * 逻辑代码
+ * =========================================================================== */
+
+const state = { comp:'all', weight:'all', usage:'all', search:'' };
+
+// 中文颜色名 → CSS颜色值
+const COLOR_MAP = {
+  '本白':'#f2ede3','白色':'#f5f5f5','米白':'#efe8db','黑色':'#2a2a2a',
+  '浅灰':'#dcdcdc','深灰':'#5e5e5e','麻灰':'#bcb4aa','灰':'#b0b0b0',
+  '浅蓝':'#c8dae8','中蓝':'#7998b0','深蓝':'#3e5670','藏青':'#2c3e50',
+  '浅粉':'#f0d8d8','淡紫':'#e2d2e8','雾霾蓝':'#b2c2d2',
+  '浅卡其':'#d8cdb8','卡其':'#c2ae8c','燕麦':'#dad2c4','燕麦色':'#dad2c4',
+  '驼色':'#c4a882','浅驼':'#d4bfa0','香槟':'#e8dcc8',
+  '浅灰绿':'#c8d5c0','薄荷绿':'#bcdccc','酒红':'#8b3a4a',
+  '军绿':'#6b7b5e','墨绿':'#4a6350',
+  '藏青格':'#3e5670','灰格':'#a0a0a0','咖格':'#a08060',
+  '本色':'#f0e8d8',
+};
+
+function getSwatchColor(fabric) {
+  const first = fabric.colors.split('/')[0].trim();
+  return COLOR_MAP[first] || '#e0e0e0';
+}
+
+function swatchHTML(fabric, size) {
+  const color = getSwatchColor(fabric);
+  const cls = size === 'large' ? 'detail-swatch' : 'card-img-swatch';
+  const labelCls = size === 'large' ? 'detail-swatch-label' : 'swatch-label';
+  return `
+    <div style="background-color:${color};position:absolute;inset:0;z-index:0;"></div>
+    <div class="${cls}"></div>
+    <div class="${labelCls}">
+      ${fabric.name}
+      <small>${fabric.id} · ${fabric.compDetail}</small>
+    </div>`;
+}
+
+function toggleChip(chip) {
+  const group = chip.dataset.group;
+  document.querySelectorAll(`.chip[data-group="${group}"]`).forEach(s => s.classList.remove('active'));
+  chip.classList.add('active');
+  state[group] = chip.dataset.value;
+  applyFilters();
+}
+
+function applyFilters() {
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  state.search = q;
+
+  const list = FABRICS.filter(f => {
+    if (state.comp !== 'all' && f.compCat !== state.comp) return false;
+    if (state.usage !== 'all' && f.usageCat !== state.usage) return false;
+
+    if (state.weight !== 'all') {
+      const w = f.weightVal;
+      if (state.weight === 'under150' && w >= 150) return false;
+      if (state.weight === '150-200' && (w < 150 || w > 200)) return false;
+      if (state.weight === '200-250' && (w < 200 || w > 250)) return false;
+      if (state.weight === 'over250' && w <= 250) return false;
+    }
+
+    if (q) {
+      if (!f.id.toLowerCase().includes(q) && !f.name.toLowerCase().includes(q) && !f.compDetail.toLowerCase().includes(q)) return false;
+    }
+    return true;
+  });
+
+  render(list);
+}
+
+function render(list) {
+  const grid = document.getElementById('grid');
+  const empty = document.getElementById('empty');
+  document.getElementById('resultCount').textContent = `${list.length} 款面料`;
+
+  if (list.length === 0) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+
+  empty.style.display = 'none';
+
+  grid.innerHTML = list.map(f => {
+    const isLight = f.weightVal < 150;
+    const isMid = f.weightVal >= 150 && f.weightVal <= 250;
+    const imgH = isLight ? 220 : isMid ? 260 : 300;
+
+    return `
+    <div class="card" onclick="openDetail('${f.id}')">
+      <div class="card-img" style="min-height:${imgH}px">
+        ${f.image ? `<img src="${f.image}" alt="${f.name}" loading="lazy">` : swatchHTML(f, 'small')}
+        <div class="card-badge">${f.id}</div>
+      </div>
+      <div class="card-body">
+        <div class="card-head">
+          <span class="card-id">${f.id}</span>
+          <span class="card-name">${f.name}</span>
+        </div>
+        <div class="card-meta">
+          <span>${f.compDetail}</span>
+          <span>${f.weight}</span>
+          <span>${f.width}</span>
+        </div>
+        <button class="btn-inquire" onclick="event.stopPropagation(); openInquiry('${f.id}')">获取样布 / 报价</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openDetail(fid) {
+  const f = FABRICS.find(x => x.id === fid);
+  if (!f) return;
+
+  document.getElementById('detailInner').innerHTML = `
+    <div class="detail-layout">
+      <div class="detail-img">
+        ${f.image ? `<img src="${f.image}" alt="${f.name}">` : swatchHTML(f, 'large')}
+      </div>
+      <div class="detail-info">
+        <div class="detail-id">${f.id}</div>
+        <div class="detail-name">${f.name}</div>
+        <div class="detail-specs">
+          <div class="detail-spec"><div class="detail-spec-label">成分</div><div class="detail-spec-value">${f.compDetail}</div></div>
+          <div class="detail-spec"><div class="detail-spec-label">克重</div><div class="detail-spec-value">${f.weight}</div></div>
+          <div class="detail-spec"><div class="detail-spec-label">门幅</div><div class="detail-spec-value">${f.width}</div></div>
+          <div class="detail-spec"><div class="detail-spec-label">用途</div><div class="detail-spec-value">${f.usage}</div></div>
+        </div>
+        <div class="detail-section-title">卖点</div>
+        <div class="detail-note">${f.note}</div>
+        <div class="detail-section-title">可选颜色</div>
+        <div class="color-list">${f.colors.split('/').map(c => `<span class="color-tag">${c.trim()}</span>`).join('')}</div>
+        <button class="detail-btn" onclick="openInquiry('${f.id}')">获取样布 / 报价</button>
+      </div>
+    </div>`;
+
+  document.getElementById('detailModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDetail() {
+  document.getElementById('detailModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function openInquiry() { window.open(JSJFORM_URL, '_blank'); }
+
+function resetAll() {
+  document.getElementById('searchInput').value = '';
+  state.comp = 'all'; state.weight = 'all'; state.usage = 'all'; state.search = '';
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.chip[data-value="all"]').forEach(c => c.classList.add('active'));
+  applyFilters();
+}
+
+document.getElementById('detailModal').addEventListener('click', function(e) { if (e.target === this) closeDetail(); });
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeDetail(); } });
+
+applyFilters();
+</script>
+</body>
+</html>
